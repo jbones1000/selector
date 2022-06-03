@@ -18,6 +18,7 @@ float 		w;
 ofImage		img;
 
 bool		confirmPage;
+int		currentSel;
 
 //--------------------------------------------------------------
 void ofApp::setup() {
@@ -64,6 +65,8 @@ void ofApp::setup() {
     // init selection
     selection = 0;
     finalSel = 0;
+    
+    currentSel = getCurrentSel();
 }
 
 //--------------------------------------------------------------
@@ -129,11 +132,12 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-
+	
+	string currentRez = nameSel( currentSel );
 	
 	string 	intro1 = "Hi - please select the Video Engine and Resolution.";
 	string 	intro2 = "Use 'Scene Select' buttons to navigate to your choice.";
-	string	which;
+	string	which = "Your Current Video Engine and Resolution is: " + currentRez;
 	string	intro3 = "When finished, press 'Scene Save' button, the EYSEY will ask for confirmation than reboot";
 	string	happy = "Happy video time!";
 
@@ -183,7 +187,9 @@ void ofApp::draw() {
 		ofTranslate( w/6, h/6 );
 		ofTranslate( space, space);
 		font.drawString( intro1, 0, 0);
-        	ofTranslate( 0, h/9 );
+        	ofTranslate( 0, h/18 );
+		font.drawString( which, 0, 0);
+		ofTranslate( 0, h/18 );
 		font.drawString( intro2, 0, 0);
 	ofPopMatrix();
 	ofPushMatrix();	
@@ -194,16 +200,17 @@ void ofApp::draw() {
 		ofTranslate( w/2, h - (h/6) );
 		font.drawString( happy, -(font.stringWidth(happy)/2 ), -(space) );
 	ofPopMatrix();
-	
+	/*
 	// draw the image
 	ofPushMatrix();
 		ofTranslate( w/2, h/6);
-		ofTranslate( space*4, space);
+		ofTranslate( space*8, space);
 		ofSetColor(255);
 		ofScale( 0.5, 0.5);		
 		img.draw(0,0);
 	ofPopMatrix();
-	
+	*/
+
 	/*	
 	// draw selection highlite
 	ofPushMatrix();
@@ -269,21 +276,8 @@ void ofApp::draw() {
 	// draw confirmation page
 	if( confirmPage == true ) {
 		string		selString;
+		selString = nameSel( selection);
 		
-		if ( selection == 0 ) {
-			selString = "openFrameworks: 1080p";
-		} else if (selection == 1) {
-			selString = "openFrameworks: 720p";
-		} else if (selection == 2) {
-			selString = "openFrameworks: 480p";
-		} else if (selection == 3) {
-			selString = "Pygame: 1080p (Slow)";
-		} else if (selection == 4) {
-			selString = "Pygame: 720p";
-		} else if( selection == 5) {
-			selString = "Pygame: 480p";
-		}
-
 		ofPushMatrix();
 			ofTranslate(w/3, h/3);
 			ofFill();
@@ -292,8 +286,8 @@ void ofApp::draw() {
 			ofSetColor(255);
 			ofDrawRectangle( 0, 0, w/3, h/3);
 			ofSetColor(0);
-			font.drawString("Press The OSD Button to Reboot", space, space*2);
-			font.drawString("Your EYESY with your selection:", space, space*4);
+			font.drawString("Press The OSD Button to Reboot your EYESY", space, space*2);
+			font.drawString("with your selection:", space, space*4);
 			font.drawString( selString, (w/6)-(font.stringWidth(selString)/2), space*10);
 		ofPopMatrix();	
 	}
@@ -307,10 +301,6 @@ void ofApp::draw() {
 	if( confirmPage == true && osdTrig == true ) {
 		cout << "it is rebooting and stuff" << "\n";
 	}
-
-	
-   
-        
 }
 
 //--------------------------------------------------------------
@@ -370,5 +360,27 @@ void ofApp::errorReceived(std::string& msg) {
     ofLogNotice() << "got a script error: " << msg;
 }
 
+//--------------------------------------------------------------
+int ofApp::getCurrentSel() {
+    return 0;
+}
+
+string ofApp::nameSel( int select ) {
+	string	sel;
+	if ( select == 0 ) {
+		sel = "openFrameworks: 1080p";
+	} else if (select == 1) {
+		sel = "openFrameworks: 720p";
+	} else if (select == 2) {
+		sel = "openFrameworks: 480p";
+	} else if (select == 3) {
+		sel = "Pygame: 1080p (Slow)";
+	} else if (select == 4) {
+		sel = "Pygame: 720p";
+	} else if( select == 5) {
+		sel = "Pygame: 480p";
+	}
+	return sel;
+}
 
 //--------------------------------------------------------------

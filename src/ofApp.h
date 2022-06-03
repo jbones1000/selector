@@ -30,11 +30,13 @@ class ofApp : public ofBaseApp, ofxLuaListener {
         void exit();
         
         // input
-        void keyPressed(int key);
-        void mouseMoved(int x, int y);
-        void mouseDragged(int x, int y, int button);
-        void mousePressed(int x, int y, int button);
-        void mouseReleased(int x, int y, int button);
+        void 	keyPressed(int key);
+        void 	mouseMoved(int x, int y);
+        void 	mouseDragged(int x, int y, int button);
+        void 	mousePressed(int x, int y, int button);
+        void 	mouseReleased(int x, int y, int button);
+	int 	getCurrentSel();
+	string	nameSel( int select );
         
         // ofxLua error callback
         void errorReceived(std::string& msg);
