@@ -15,8 +15,9 @@
 float 		h; 
 float 		w; 
 
-
 ofImage		img;
+
+bool		confirmPage;
 
 //--------------------------------------------------------------
 void ofApp::setup() {
@@ -52,7 +53,7 @@ void ofApp::setup() {
     lua.scriptSetup();
 
     // load font
-    font.load("CGFont_0.18.otf", 124, true, false, false, 1, 24);
+    font.load("CGFont_0.18.otf", 74, true, false, false, 1, 24);
 
     // load image
     img.load("images/eyesy-engine.png");
@@ -71,7 +72,7 @@ void ofApp::update() {
     saved = false;
     up = false;
     down = false;
-    
+    osdTrig = false;
 
     // check for waiting messages
     while(receiver.hasWaitingMessages()){
@@ -87,14 +88,19 @@ void ofApp::update() {
             		saved = true; 	
 		}
 	    	
-		// trigger button
+		// scene up
 	   	if (m.getArgAsInt32(0) == 50 && m.getArgAsInt32(1) > 0) {
 			up = true;
 		}
 	    	
-		// osd toggle button
+		// scene down
        	    	if (m.getArgAsInt32(0) == 49 && m.getArgAsInt32(1) > 0) {
 			down = true;
+		}
+
+		// osd toggle
+       	    	if (m.getArgAsInt32(0) == 1 && m.getArgAsInt32(1) > 0) {
+			osdTrig = true;
 		}
 
 	    	
@@ -123,23 +129,14 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	ofSetBackgroundColor(255);
+
 	
 	string 	intro1 = "Hi - please select the Video Engine and Resolution.";
 	string 	intro2 = "Use 'Scene Select' buttons to navigate to your choice.";
 	string	which;
-	string	intro = "When finished, press 'Scene Save' button, the EYESY will restart with: ";
-	
-	if( finalSel == 0 ) {which = "oF 1080p";}
-	if( finalSel == 1 ) {which = "oF 720p";}
-	if( finalSel == 2 ) {which = "oF 480p";}
-	if( finalSel == 3 ) {which = "pY 1080p";}
-	if( finalSel == 4 ) {which = "pY 720p";}
-	if( finalSel == 5 ) {which = "pY 480p";}
+	string	intro3 = "When finished, press 'Scene Save' button, the EYSEY will ask for confirmation than reboot";
+	string	happy = "Happy video time!";
 
-	
-	string	intro3 = intro  + which;	
-	
 	if( up ) { 
 		if( selection >= 5 ) {
 			selection = 0;
@@ -159,39 +156,55 @@ void ofApp::draw() {
 		finalSel = selection;
 	}
 	
-	// draw top third instructions and hello
+	// draw the graphics
 	int space = font.stringHeight( intro1 );
+	ofSetBackgroundColor(0,191,230);
+	// draw the background rectangles
 	ofPushMatrix();
-		ofSetColor(0);
+		// main rect	
+		ofSetColor(0,115,230);
+		//ofSetColor(0);
 		ofFill();
-		ofTranslate( space, space + (space/2) );
+		ofTranslate(w/6, h/6);
+		ofDrawRectangle( 0, 0, (w/3)*2, (h/3)*2 );
+		// small top pink
+		ofTranslate(w/6, h/6);
+		ofSetColor(230, 152, 210);
+		ofDrawRectangle( 0, 0, w/3, h/6);
+		// small bottom green
+		ofTranslate(0, h/6);
+		ofSetColor(45, 200, 130);
+		ofDrawRectangle( 0, 0, w/3, h/6);
+	ofPopMatrix();
+	
+	// draw the text
+	ofPushMatrix();	
+		ofSetColor(255);
+		ofTranslate( w/6, h/6 );
+		ofTranslate( space, space);
 		font.drawString( intro1, 0, 0);
         	ofTranslate( 0, h/9 );
 		font.drawString( intro2, 0, 0);
-		ofTranslate( 0, h/9 );
-		font.drawString( intro3, 0, 0);
+	ofPopMatrix();
+	ofPushMatrix();	
+		ofTranslate( (w/6)+space, h - (h/6) );
+		font.drawString( intro3, 0, -(space*4));
+	ofPopMatrix();
+	ofPushMatrix();	
+		ofTranslate( w/2, h - (h/6) );
+		font.drawString( happy, -(font.stringWidth(happy)/2 ), -(space) );
 	ofPopMatrix();
 	
 	// draw the image
 	ofPushMatrix();
+		ofTranslate( w/2, h/6);
+		ofTranslate( space*4, space);
 		ofSetColor(255);
-		ofTranslate( (w/6)*4, h/100 );
+		ofScale( 0.5, 0.5);		
 		img.draw(0,0);
 	ofPopMatrix();
 	
-	// draw bottom 2 backgrounds
-	ofPushMatrix();
-		// draw middle third bg
-		ofTranslate( 0, h/3);
-		ofSetColor(45, 150, 100);
-		ofDrawRectangle( 0, 0, w, h/3);
-		// draw bottom third bg
-		ofTranslate( 0, h/3);
-		ofSetColor(190, 112, 210);
-		ofDrawRectangle( 0, 0, w, h/3);
-		
-	ofPopMatrix();
-	
+	/*	
 	// draw selection highlite
 	ofPushMatrix();
 		ofTranslate( w/2, h/3 );
@@ -200,50 +213,100 @@ void ofApp::draw() {
 		int highlite1 = finalSel * (h/9);
         	ofDrawRectangle(0, highlite1, w/4, h/9);
 	ofPopMatrix();
-	
+	*/
+
 	// draw texts
 	ofPushMatrix();
-		ofTranslate( 0, h/3);
-		//// draw openframeworks title
+		// draw openframeworks title
+		ofTranslate( w/2, (h/3)+(h/12) );
+		ofTranslate( -space, 0);
+		string titleOF = "openFrameworks";
 		ofSetColor(0);
-		font.drawString("OpenFrameWorks", space*2, (h/6) + (space/2) );
+		font.drawString( titleOF, -font.stringWidth( titleOF ), font.stringHeight( titleOF) / 2);
 		
 		//// draw the 3 rez
-		ofTranslate( (w/8)*5, (h/9) - space );
-		ofTranslate( -(font.stringWidth("1080p") / 2), 0 );
-		font.drawString("1080p", 0, 0 );
-		ofTranslate( 0, h/9);
-		font.drawString( "720p", 0, 0 );
-		ofTranslate( 0, h/9);
-		font.drawString( "480p", 0, 0 );
+		ofTranslate( (w/12)+space, -(h/12) );
+		ofTranslate( 0, space+(space/2));
+		font.drawString("1080p", -(font.stringWidth("1080p")/2), 0 );
+		ofTranslate( 0, h/18);
+		font.drawString( "720p", -(font.stringWidth("720p")/2), 0 );
+		ofTranslate( 0, h/18);
+		font.drawString( "480p", -(font.stringWidth("480p")/2), 0 );
 	ofPopMatrix();
 	
 	ofPushMatrix();
-		// draw bottom third rectangle
-		ofTranslate( 0, (h/3)*2);
 		// draw python title
+		ofTranslate( w/2, ((h/3)+(h/6)) + (h/12) );
+		ofTranslate( -space, 0 );
+		string titlePY = "Pygame";
 		ofSetColor(0);
+		font.drawString( titlePY, -font.stringWidth( titlePY ), font.stringHeight( titlePY) / 2 );
 		
-		font.drawString("Pygame", space*2, (h/6) + (space/2) );
 		//// draw the 3 rez
-		ofTranslate( (w/8)*5, (h/9) - space );
-		ofTranslate( -(font.stringWidth("1080p") / 2), 0 );
-		font.drawString("1080p(slow)", 0, 0 );
-		ofTranslate( 0, h/9);
-		font.drawString( "720p", 0, 0 );
-		ofTranslate( 0, h/9);
-		font.drawString( "480p", 0, 0 );
+		ofTranslate( (w/12)+space, -(h/12) );
+		ofTranslate( 0, space+(space/2));
+		font.drawString("1080p(Slow)", -(font.stringWidth("1080p(Slow)")/2), 0 );
+		ofTranslate( 0, h/18);
+		font.drawString( "720p", -(font.stringWidth("720p")/2), 0 );
+		ofTranslate( 0, h/18);
+		font.drawString( "480p", -(font.stringWidth("480p")/2), 0 );
 	ofPopMatrix();
 	
-	// display through a Highlight saved selection
-	
-	
+	// display selection box
 	ofPushMatrix();
 		ofTranslate( w/2, h/3 );
 		ofNoFill();
-		int highlite = selection * (h/9);
-        	ofDrawRectangle(0, highlite, w/4, h/9);
+		int highlite = selection * (h/18);
+        	ofDrawRectangle(0, highlite, w/6, h/18);
+		ofDrawRectangle(1, highlite+1, (w/6)-2, (h/18)-2 );
 	ofPopMatrix();
+	
+	// display window for confirmation
+	if( saved == true && confirmPage == false ) {
+		confirmPage = true;
+	}
+	
+	// draw confirmation page
+	if( confirmPage == true ) {
+		string		selString;
+		
+		if ( selection == 0 ) {
+			selString = "openFrameworks: 1080p";
+		} else if (selection == 1) {
+			selString = "openFrameworks: 720p";
+		} else if (selection == 2) {
+			selString = "openFrameworks: 480p";
+		} else if (selection == 3) {
+			selString = "Pygame: 1080p (Slow)";
+		} else if (selection == 4) {
+			selString = "Pygame: 720p";
+		} else if( selection == 5) {
+			selString = "Pygame: 480p";
+		}
+
+		ofPushMatrix();
+			ofTranslate(w/3, h/3);
+			ofFill();
+			ofSetColor(0);
+			ofDrawRectangle( h/128, h/128, w/3, h/3);
+			ofSetColor(255);
+			ofDrawRectangle( 0, 0, w/3, h/3);
+			ofSetColor(0);
+			font.drawString("Press The OSD Button to Reboot", space, space*2);
+			font.drawString("Your EYESY with your selection:", space, space*4);
+			font.drawString( selString, (w/6)-(font.stringWidth(selString)/2), space*10);
+		ofPopMatrix();	
+	}
+
+	// turn off confirmation page if any of the scene buttons are pressed
+	if( confirmPage == true && (up == true || down == true ) ) {
+		confirmPage = false;
+	}
+	
+	// rewrite config.txt and reboot
+	if( confirmPage == true && osdTrig == true ) {
+		cout << "it is rebooting and stuff" << "\n";
+	}
 
 	
    

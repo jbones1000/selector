@@ -48,6 +48,7 @@ class ofApp : public ofBaseApp, ofxLuaListener {
 	bool		up;
 	bool		down;
 	bool		saved;
+	bool		osdTrig;
 	int		selection;
 	int		finalSel;
 
