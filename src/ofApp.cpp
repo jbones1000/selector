@@ -54,10 +54,10 @@ void ofApp::setup() {
     lua.scriptSetup();
 
     // load font
-    font.load("CGFont_0.18.otf", 74, true, false, false, 1, 24);
+    font.load("CGFont_0.18.otf", 124, true, false, false, 1, 24);
 
     // load image
-    img.load("images/eyesy-engine.png");
+    img.load("images/eyesy_engine_03.png");
 
     // clear main screen
     ofClear(0,0,0);
@@ -109,38 +109,13 @@ void ofApp::update() {
 	    	
 	}	
 
-	////// the knobs
-        if(m.getAddress() == "/knob1") {
-		//knob1Local = m.getArgAsInt32(0);
-		
-	}
-	if(m.getAddress() == "/knob2") {
-		
-	}
-	if(m.getAddress() == "/knob3") {
-		
-	}
-	if(m.getAddress() == "/knob4") {
-		
-	}	
-	if(m.getAddress() == "/knob5") {
-		
-	}
     } // end of receiving messages from pure data
    
 } // end of update function
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	
-	string currentRez = nameSel( currentSel );
-	
-	string 	intro1 = "Hi - please select the Video Engine and Resolution.";
-	string 	intro2 = "Use 'Scene Select' buttons to navigate to your choice.";
-	string	which = "Your Current Video Engine and Resolution is: " + currentRez;
-	string	intro3 = "When finished, press 'Scene Save' button, the EYSEY will ask for confirmation than reboot";
-	string	happy = "Happy video time!";
-
+	// selection buttons
 	if( up ) { 
 		if( selection >= 5 ) {
 			selection = 0;
@@ -161,111 +136,32 @@ void ofApp::draw() {
 	}
 	
 	// draw the graphics
-	int space = font.stringHeight( intro1 );
-	ofSetBackgroundColor(0,191,230);
-	// draw the background rectangles
-	ofPushMatrix();
-		// main rect	
-		ofSetColor(0,115,230);
-		//ofSetColor(0);
-		ofFill();
-		ofTranslate(w/6, h/6);
-		ofDrawRectangle( 0, 0, (w/3)*2, (h/3)*2 );
-		// small top pink
-		ofTranslate(w/6, h/6);
-		ofSetColor(230, 152, 210);
-		ofDrawRectangle( 0, 0, w/3, h/6);
-		// small bottom green
-		ofTranslate(0, h/6);
-		ofSetColor(45, 200, 130);
-		ofDrawRectangle( 0, 0, w/3, h/6);
-	ofPopMatrix();
+	//
+	string currentRez = nameSel( currentSel );
+	int space = font.stringHeight( currentRez );
+	
+	// draw the png
+	ofSetBackgroundColor(0);
+	ofSetColor(255);
+	img.draw(0,0);
 	
 	// draw the text
 	ofPushMatrix();	
 		ofSetColor(255);
-		ofTranslate( w/6, h/6 );
+		ofTranslate( (w/3)-(w/21.5), (h/3)-(h/9.8) );
 		ofTranslate( space, space);
-		font.drawString( intro1, 0, 0);
-        	ofTranslate( 0, h/18 );
-		font.drawString( which, 0, 0);
-		ofTranslate( 0, h/18 );
-		font.drawString( intro2, 0, 0);
-	ofPopMatrix();
-	ofPushMatrix();	
-		ofTranslate( (w/6)+space, h - (h/6) );
-		font.drawString( intro3, 0, -(space*4));
-	ofPopMatrix();
-	ofPushMatrix();	
-		ofTranslate( w/2, h - (h/6) );
-		font.drawString( happy, -(font.stringWidth(happy)/2 ), -(space) );
-	ofPopMatrix();
-	/*
-	// draw the image
-	ofPushMatrix();
-		ofTranslate( w/2, h/6);
-		ofTranslate( space*8, space);
-		ofSetColor(255);
-		ofScale( 0.5, 0.5);		
-		img.draw(0,0);
-	ofPopMatrix();
-	*/
-
-	/*	
-	// draw selection highlite
-	ofPushMatrix();
-		ofTranslate( w/2, h/3 );
-		ofSetColor(200,200,0);
-		ofFill();
-		int highlite1 = finalSel * (h/9);
-        	ofDrawRectangle(0, highlite1, w/4, h/9);
-	ofPopMatrix();
-	*/
-
-	// draw texts
-	ofPushMatrix();
-		// draw openframeworks title
-		ofTranslate( w/2, (h/3)+(h/12) );
-		ofTranslate( -space, 0);
-		string titleOF = "openFrameworks";
-		ofSetColor(0);
-		font.drawString( titleOF, -font.stringWidth( titleOF ), font.stringHeight( titleOF) / 2);
-		
-		//// draw the 3 rez
-		ofTranslate( (w/12)+space, -(h/12) );
-		ofTranslate( 0, space+(space/2));
-		font.drawString("1080p", -(font.stringWidth("1080p")/2), 0 );
-		ofTranslate( 0, h/18);
-		font.drawString( "720p", -(font.stringWidth("720p")/2), 0 );
-		ofTranslate( 0, h/18);
-		font.drawString( "480p", -(font.stringWidth("480p")/2), 0 );
-	ofPopMatrix();
-	
-	ofPushMatrix();
-		// draw python title
-		ofTranslate( w/2, ((h/3)+(h/6)) + (h/12) );
-		ofTranslate( -space, 0 );
-		string titlePY = "Pygame";
-		ofSetColor(0);
-		font.drawString( titlePY, -font.stringWidth( titlePY ), font.stringHeight( titlePY) / 2 );
-		
-		//// draw the 3 rez
-		ofTranslate( (w/12)+space, -(h/12) );
-		ofTranslate( 0, space+(space/2));
-		font.drawString("1080p(Slow)", -(font.stringWidth("1080p(Slow)")/2), 0 );
-		ofTranslate( 0, h/18);
-		font.drawString( "720p", -(font.stringWidth("720p")/2), 0 );
-		ofTranslate( 0, h/18);
-		font.drawString( "480p", -(font.stringWidth("480p")/2), 0 );
-	ofPopMatrix();
+		font.drawString( currentRez, 0, 0);
+        ofPopMatrix();
 	
 	// display selection box
 	ofPushMatrix();
-		ofTranslate( w/2, h/3 );
+		ofTranslate( (w/2)+(w/24.59), (h/3)+(h/5.8) );
 		ofNoFill();
-		int highlite = selection * (h/18);
-        	ofDrawRectangle(0, highlite, w/6, h/18);
-		ofDrawRectangle(1, highlite+1, (w/6)-2, (h/18)-2 );
+		int boxHeight = floor(h/17.35);
+		int boxWidth = floor(w/7.45);
+		int highlite = selection * boxHeight;
+        	ofDrawRectangle(0, highlite, boxWidth, boxHeight);
+		ofDrawRectangle(1, highlite+1, boxWidth-2, boxHeight );
 	ofPopMatrix();
 	
 	// display window for confirmation
@@ -273,32 +169,39 @@ void ofApp::draw() {
 		confirmPage = true;
 	}
 	
-	// draw confirmation page
-	if( confirmPage == true ) {
-		string		selString;
-		selString = nameSel( selection);
-		
-		ofPushMatrix();
-			ofTranslate(w/3, h/3);
-			ofFill();
-			ofSetColor(0);
-			ofDrawRectangle( h/128, h/128, w/3, h/3);
-			ofSetColor(255);
-			ofDrawRectangle( 0, 0, w/3, h/3);
-			ofSetColor(0);
-			font.drawString("Press The OSD Button to Reboot your EYESY", space, space*2);
-			font.drawString("with your selection:", space, space*4);
-			font.drawString( selString, (w/6)-(font.stringWidth(selString)/2), space*10);
-		ofPopMatrix();	
-	}
-
 	// turn off confirmation page if any of the scene buttons are pressed
 	if( confirmPage == true && (up == true || down == true ) ) {
 		confirmPage = false;
 	}
 	
+	// draw confirmation page
+	if( confirmPage == true ) {
+		string		selString;
+		selString = nameSel( selection );
+		
+		ofPushMatrix();
+			ofTranslate(w/4, h/4);
+			ofFill();
+			ofSetColor(50,50,50);  // draw a gray background
+			ofDrawRectangle( h/128, h/128, w/2, h/2);
+			ofSetColor(255);
+			ofDrawRectangle( 0, 0, w/2, h/2);
+			ofSetColor(0);
+			//ofScale(0.5,0.5);
+			font.drawString("Press The OSD Button to Reboot your EYESY", space/2, space*2);
+			font.drawString("with your selection:", space/2, space*4);
+		ofPopMatrix();
+		ofPushMatrix();
+			ofTranslate(w/2,h/2);
+			font.drawString( selString, (w/6)-(font.stringWidth(selString)/2), space*10);
+		ofPopMatrix();	
+	}
+
+	
+	
 	// rewrite config.txt and reboot
 	if( confirmPage == true && osdTrig == true ) {
+		rezSelected( selection );
 		cout << "it is rebooting and stuff" << "\n";
 	}
 }
@@ -365,6 +268,7 @@ int ofApp::getCurrentSel() {
     return 0;
 }
 
+//--------------------------------------------------------------
 string ofApp::nameSel( int select ) {
 	string	sel;
 	if ( select == 0 ) {
@@ -381,6 +285,11 @@ string ofApp::nameSel( int select ) {
 		sel = "Pygame: 480p";
 	}
 	return sel;
+}
+
+//--------------------------------------------------------------
+void ofApp::rezSelected(int sel) {
+    cout << "reboot! with this rez computer please!: " << nameSel( sel ) << "\n";
 }
 
 //--------------------------------------------------------------

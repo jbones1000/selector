@@ -37,6 +37,7 @@ class ofApp : public ofBaseApp, ofxLuaListener {
         void 	mouseReleased(int x, int y, int button);
 	int 	getCurrentSel();
 	string	nameSel( int select );
+	void rezSelected( int sel );
         
         // ofxLua error callback
         void errorReceived(std::string& msg);
