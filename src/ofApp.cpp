@@ -148,7 +148,7 @@ void ofApp::draw() {
 	// draw the text
 	ofPushMatrix();	
 		ofSetColor(255);
-		ofTranslate( (w/3)-(w/21.5), (h/3)-(h/9.8) );
+		ofTranslate( (w/3)-(w/16), (h/3)-(h/11) );
 		ofTranslate( space, space);
 		font.drawString( currentRez, 0, 0);
         ofPopMatrix();
@@ -192,8 +192,8 @@ void ofApp::draw() {
 			font.drawString("with your selection:", space/2, space*4);
 		ofPopMatrix();
 		ofPushMatrix();
-			ofTranslate(w/2,h/2);
-			font.drawString( selString, (w/6)-(font.stringWidth(selString)/2), space*10);
+			ofTranslate( w/2, h/2 );
+			font.drawString( selString, -(font.stringWidth(selString)/2), space*2);
 		ofPopMatrix();	
 	}
 
